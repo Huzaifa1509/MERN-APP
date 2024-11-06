@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
-import { createProduct } from '../api';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getProductById, updateProduct } from '../api';
 import { toast } from 'react-toastify';
 
-const AddProduct = () => {
+const UpdateProduct = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [productData, setProductData] = useState({
         name: '',
         description: '',
         price: '',
         stock: ''
     });
+
+    useEffect(() => {
+        // Fetch the product data to populate the form
+        const fetchProduct = async () => {
+            try {
+                const response = await getProductById(id);
+                setProductData(response.data);
+            } catch (error) {
+                toast.error("Failed to load product data");
+            }
+        };
+        fetchProduct();
+    }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -18,22 +34,21 @@ const AddProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await createProduct(productData);
-            toast.success("Product added successfully!");
-            setProductData({ name: '', description: '', price: '', stock: '' });
+            await updateProduct(id, productData);
+            toast.success("Product updated successfully!");
+            navigate('/');
         } catch (error) {
             if (error.response && error.response.status === 409) {
-                toast.error('Product already exists');
+                toast.error("Product name already exists");
             } else {
-                toast.error('Failed to add product');
+                toast.error("Failed to update product");
             }
-            console.error(error);
         }
     };
 
     return (
         <div className="container mt-5">
-            <h2 className="text-center">Add Product</h2>
+            <h2 className="text-center">Update Product</h2>
             <form onSubmit={handleSubmit} className="mt-4">
                 <div className="form-group mb-3">
                     <label htmlFor="name">Name:</label>
@@ -76,10 +91,10 @@ const AddProduct = () => {
                         className="form-control"
                     />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Add Product</button>
+                <button type="submit" className="btn btn-primary w-100">Update Product</button>
             </form>
         </div>
     );
 };
 
-export default AddProduct;
+export default UpdateProduct;

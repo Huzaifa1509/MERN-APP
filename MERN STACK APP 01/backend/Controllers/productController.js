@@ -3,6 +3,14 @@ const Product = require('../Models/Product');
 // Create a product
 const createProduct = async (req, res) => {
     try {
+        const { name } = req.body;
+        
+        // Check if the product already exists
+        const existingProduct = await Product.findOne({ name });
+        if (existingProduct) {
+            return res.status(409).json({ message: "Product already exists" });
+        }
+        
         const product = new Product(req.body);
         await product.save();
         res.status(201).json(product);
@@ -38,12 +46,24 @@ const getProductById = async (req, res) => {
 // Update product
 const updateProduct = async (req, res) => {
     try {
-        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { name } = req.body;
+        const { id } = req.params;
+        
+        // Check if another product with the same name exists
+        const existingProduct = await Product.findOne({ name, _id: { $ne: id } });
+        if (existingProduct) {
+            return res.status(409).json({ message: "Product name already in use by another product" });
+        }
+
+        const product = await Product.findByIdAndUpdate(id, req.body, { new: true });
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
         res.json(product);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-};
+}
 
 // Delete product
 const deleteProduct = async (req, res) => {

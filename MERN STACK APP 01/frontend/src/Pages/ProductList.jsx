@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts, deleteProduct } from '../api';
-
+import { Link } from 'react-router-dom';
 const ProductList = () => {
     const [products, setProducts] = useState([]);
 
@@ -29,29 +29,33 @@ const ProductList = () => {
     };
 
     return (
-        <div>
-            <h2>Product List</h2>
-            <ul>
+        <div className="container mt-5">
+            <h2 className="text-center">Product List</h2>
+            <div className="row">
                 {products.map((product) => (
-                    <li key={product._id} style={styles.productItem}>
-                        <h3>{product.name}</h3>
-                        <p>{product.description}</p>
-                        <p>Price: ${product.price}</p>
-                        <p>Stock: {product.stock}</p>
-                        <button onClick={() => handleDelete(product._id)}>Delete</button>
-                    </li>
+                    <div key={product._id} className="col-md-4 mb-4">
+                        <div className="card h-100">
+                            <div className="card-body">
+                                <h5 className="card-title">{product.name}</h5>
+                                <p className="card-text">{product.description}</p>
+                                <p className="card-text"><strong>Price:</strong> Rs.{product.price}</p>
+                                <p className="card-text"><strong>Stock:</strong> {product.stock}</p>
+                                <button
+                                    onClick={() => handleDelete(product._id)}
+                                    className="btn btn-danger w-100 mt-2"
+                                >
+                                    Delete
+                                </button>
+                                <Link to={`/edit/${product._id}`} className="btn btn-warning w-100 mt-2">
+                                    Edit
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
-};
-
-const styles = {
-    productItem: {
-        border: '1px solid #ccc',
-        padding: '1rem',
-        marginBottom: '1rem'
-    }
 };
 
 export default ProductList;
