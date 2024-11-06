@@ -10,12 +10,12 @@ const PORT = process.env.PORT || 5000;
 // app.use(cors());
 
 const corsOptions = {
-    origin: 'http://localhost:3000', // Allow requests from the frontend
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow all CRUD methods
-    allowedHeaders: ["Content-Type"], // Allow specific headers
+    origin: 'http://localhost:3000',
+    methods: ["GET", "POST", "PUT", "DELETE"], 
+    allowedHeaders: ["Content-Type"], 
 };
 
-app.use(cors(corsOptions)); // Apply CORS globally
+app.use(cors(corsOptions));
 
 
 // Middleware
