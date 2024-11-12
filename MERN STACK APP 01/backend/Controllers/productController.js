@@ -4,13 +4,13 @@ const Product = require('../Models/Product');
 const createProduct = async (req, res) => {
     try {
         const { name } = req.body;
-        
+
         // Check if the product already exists
         const existingProduct = await Product.findOne({ name });
         if (existingProduct) {
             return res.status(409).json({ message: "Product already exists" });
         }
-        
+
         const product = new Product(req.body);
         await product.save();
         res.status(201).json(product);
@@ -48,7 +48,7 @@ const updateProduct = async (req, res) => {
     try {
         const { name } = req.body;
         const { id } = req.params;
-        
+
         // Check if another product with the same name exists
         const existingProduct = await Product.findOne({ name, _id: { $ne: id } });
         if (existingProduct) {

@@ -18,6 +18,15 @@ const Nav = () => {
                         <li className="nav-item">
                             <Link to="/add" className="nav-link">Add Product</Link>
                         </li>
+                        <li className="nav-item">
+                            <Link to="/users" className="nav-link">All Users</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/adduser" className="nav-link">Register User</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/login" className="nav-link">Login User</Link>
+                        </li>
                     </ul>
                 </div>
             </div>
